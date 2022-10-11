@@ -35,8 +35,9 @@ const main = async () => {
     // const row = GoogleSheets.getRow(sheet, 0);
     // console.log(row);
     // const name = GoogleSheets.getValueFromRow(row, "Email");
-    const message = template_1.Template.createMessageFromRow("Hello {{message}}", {
+    const message = template_1.Template.createMessage("Hello {{message}}, my name is {{name}}", {
         message: "World",
+        name: "Eric",
     });
     console.log(message);
     // console.log(name);
