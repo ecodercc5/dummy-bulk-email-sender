@@ -23,6 +23,26 @@ var GoogleSheets;
             rows,
         };
     };
+    const toGoogleSheet = (rawSheet) => {
+        const { id, range } = rawSheet;
+        const headers = GoogleSheets.getHeader(rawSheet);
+        const rows = getRawRows(rawSheet).map((row) => {
+            const sheetRow = {};
+            for (let i = 0; i < headers.length; i++) {
+                const header = headers[i];
+                const value = row[i];
+                sheetRow[header] = value;
+            }
+            return sheetRow;
+        });
+        const sheet = {
+            id,
+            range,
+            headers,
+            rows,
+        };
+        return sheet;
+    };
     GoogleSheets.getSheet = async (api, args) => {
         const { id, range } = args;
         const data = await api.spreadsheets.values
@@ -31,7 +51,8 @@ var GoogleSheets;
             spreadsheetId: id,
         })
             .then((res) => res.data);
-        const googleSheet = from(id, range, data);
+        const rawGoogleSheet = from(id, range, data);
+        const googleSheet = toGoogleSheet(rawGoogleSheet);
         return googleSheet;
     };
     GoogleSheets.isEmpty = (sheet) => {

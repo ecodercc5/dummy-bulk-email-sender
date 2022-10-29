@@ -2,10 +2,21 @@ import { google, sheets_v4 } from "googleapis";
 
 type GoogleSheetsAPI = sheets_v4.Sheets;
 
-interface IGoogleSheet {
+interface IRawGoogleSheet {
   id: string;
   range: string;
   rows: any[][];
+}
+
+interface IGoogleSheet {
+  id: string;
+  range: string;
+  headers: string[];
+  rows: IGoogleSheetRow[];
+}
+
+interface IGoogleSheetRow {
+  [header: string]: any;
 }
 
 interface IRow {
@@ -35,7 +46,7 @@ export namespace GoogleSheets {
     id: string,
     range: string,
     data: sheets_v4.Schema$ValueRange
-  ): IGoogleSheet => {
+  ): IRawGoogleSheet => {
     const rows = data.values as any[][];
 
     return {
@@ -43,6 +54,33 @@ export namespace GoogleSheets {
       range,
       rows,
     };
+  };
+
+  const toGoogleSheet = (rawSheet: IRawGoogleSheet): IGoogleSheet => {
+    const { id, range } = rawSheet;
+    const headers = getHeader(rawSheet);
+
+    const rows = getRawRows(rawSheet).map((row) => {
+      const sheetRow = {} as any;
+
+      for (let i = 0; i < headers.length; i++) {
+        const header = headers[i];
+        const value = row[i];
+
+        sheetRow[header] = value;
+      }
+
+      return sheetRow;
+    });
+
+    const sheet = {
+      id,
+      range,
+      headers,
+      rows,
+    };
+
+    return sheet;
   };
 
   export const getSheet = async (
@@ -61,29 +99,30 @@ export namespace GoogleSheets {
       })
       .then((res) => res.data);
 
-    const googleSheet = from(id, range, data);
+    const rawGoogleSheet = from(id, range, data);
+    const googleSheet = toGoogleSheet(rawGoogleSheet);
 
     return googleSheet;
   };
 
-  export const isEmpty = (sheet: IGoogleSheet): boolean => {
+  export const isEmpty = (sheet: IRawGoogleSheet): boolean => {
     return sheet.rows.length === 0;
   };
 
-  export const getNumRows = (sheet: IGoogleSheet) => {
+  export const getNumRows = (sheet: IRawGoogleSheet) => {
     // number of rows excluding header
     return sheet.rows.length - 1;
   };
 
-  export const getHeader = (sheet: IGoogleSheet): any[] => {
+  export const getHeader = (sheet: IRawGoogleSheet): any[] => {
     return sheet.rows[0]!;
   };
 
-  const getRawRows = (sheet: IGoogleSheet) => {
+  const getRawRows = (sheet: IRawGoogleSheet) => {
     return sheet.rows.slice(1);
   };
 
-  export const getRow = (sheet: IGoogleSheet, rowIndex: number): IRow => {
+  export const getRow = (sheet: IRawGoogleSheet, rowIndex: number): IRow => {
     const header = getHeader(sheet);
     const rows = getRawRows(sheet);
 

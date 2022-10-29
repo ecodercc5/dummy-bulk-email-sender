@@ -39,11 +39,11 @@ const sendEmails = async (page, emails) => {
             newMailBtn.click();
         });
         const toInput = await page.waitForSelector(`div[contenteditable="true"][aria-label="To"]`);
-        await (toInput === null || toInput === void 0 ? void 0 : toInput.type(to));
+        await toInput?.type(to);
         const subjectInput = await page.waitForSelector(`input[aria-label="Add a subject"]`);
-        await (subjectInput === null || subjectInput === void 0 ? void 0 : subjectInput.type(subject));
+        await subjectInput?.type(subject);
         const bodyInput = await page.waitForSelector(`div[contenteditable="true"][aria-label="Message body, press Alt+F10 to exit"]`);
-        await (bodyInput === null || bodyInput === void 0 ? void 0 : bodyInput.type(body));
+        await bodyInput?.type(body);
         await page.evaluate(async () => {
             const buttons = Array.from(document.querySelectorAll("button"));
             const sendBtn = buttons.find((btn) => {
@@ -61,10 +61,10 @@ const main = async () => {
     // login into
     const emailInput = await page.waitForSelector(`input[type="email"]`);
     const submitEmail = await page.waitForSelector(`input[type="submit"]`);
-    await (emailInput === null || emailInput === void 0 ? void 0 : emailInput.type("eric25@mit.edu"));
+    await emailInput?.type("eric25@mit.edu");
     console.log("yo");
     await Promise.all([
-        await (submitEmail === null || submitEmail === void 0 ? void 0 : submitEmail.click()),
+        await submitEmail?.click(),
         await page.waitForNavigation(),
     ]);
     // touchstone login

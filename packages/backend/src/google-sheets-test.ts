@@ -14,12 +14,20 @@ const sheet = {
 
 // authentication
 const main = async () => {
-  // const auth = await google.auth.getClient({
-  //   scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
-  //   keyFile: "../secrets.json",
-  // });
+  const auth = await google.auth.getClient({
+    scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
+    keyFile: "../secrets.json",
+  });
 
-  // const sheets = google.sheets({ version: "v4", auth });
+  const sheets = google.sheets({ version: "v4", auth });
+
+  const data = await sheets.spreadsheets
+    .get({
+      spreadsheetId: "1RRC6MRwxZJzaLFHP0Xnn-tdbWv5bfLeW7QTcKD5ytLs",
+    })
+    .then((res) => res.data);
+
+  console.log(data);
 
   // const sheets = await GoogleSheets.createAPI("../secrets.json");
 
@@ -50,14 +58,14 @@ const main = async () => {
   // const name = GoogleSheets.getValueFromRow(row, "Email");
 
   const message = Template.createMessage(
-    "Hello {{message}}, my name is {{name}}",
+    "Hello {{message}}, my name is{{name}}",
     {
       message: "World",
       name: "Eric",
     }
   );
 
-  console.log(message);
+  // console.log(message);
   // console.log(name);
 };
 

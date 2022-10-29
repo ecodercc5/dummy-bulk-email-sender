@@ -1,34 +1,15 @@
 export namespace Template {
   export const createMessage = (message: string, values: Object) => {
-    const words = message.split(" ");
-    const filled = [];
+    // there are edge cases that I'm going to ignore for now
+    let finalMessage = message;
 
-    for (const word of words) {
-      const containsDelimiters = word.includes("{{") && word.includes("}}");
+    for (const variable of Object.keys(values)) {
+      const template = `{{${variable}}}`;
+      const value = `${(values as any)[variable]}`;
 
-      if (containsDelimiters) {
-        const front = word.substring(0, 2);
-        const back = word.substring(word.length - 2);
-
-        const correctlyEnclosed = front === "{{" && back === "}}";
-
-        if (!correctlyEnclosed) {
-          filled.push(word);
-          continue;
-        }
-
-        const variable = word.substring(2, word.length - 2);
-
-        const value = (values as any)[variable];
-
-        filled.push(value);
-      } else {
-        filled.push(word);
-      }
+      finalMessage = finalMessage.replaceAll(template, value);
     }
 
-    const filledMessage = filled.join(" ");
-
-    return filledMessage;
+    return finalMessage;
   };
 }
