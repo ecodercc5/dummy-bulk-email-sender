@@ -1,9 +1,12 @@
 GET http://localhost:8000/api/spreadsheet?spreadSheetId=1RRC6MRwxZJzaLFHP0Xnn-tdbWv5bfLeW7QTcKD5ytLs&range=Sheet1
 
 ### 
-POST http://localhost:8000/api/emails?spreadSheetId=1RRC6MRwxZJzaLFHP0Xnn-tdbWv5bfLeW7QTcKD5ytLs&range=Sheet1
+POST http://localhost:8000/api/emails
 Content-Type: application/json
 
 {
-    "message": "Hello {{Name}}"
+    "subject": "{{Name}} is your favorite color {{Color}}?",
+    "message": "Hello {{Name}}, it's Eric",
+    "spreadSheetId": "1RRC6MRwxZJzaLFHP0Xnn-tdbWv5bfLeW7QTcKD5ytLs",
+    "range": "Sheet1"
 }

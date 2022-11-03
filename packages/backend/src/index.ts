@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
-import { GoogleSheets } from "./apis/google-sheets";
+import { GoogleSheets, IGoogleSheet } from "./apis/google-sheets";
 import { Template } from "./template";
+import { OutlookEmailSender } from "./outlook-email-sender";
 
 const app = express();
 
@@ -44,26 +45,66 @@ app.get("/api/spreadsheet", async (req, res) => {
   });
 });
 
-app.post("/api/emails", async (req, res) => {
-  const { spreadSheetId, range } = req.query as unknown as IGetSpreadSheetQuery;
-  const { message } = req.body as { message: string };
+// refactor everything another day
 
-  // get spreadsheet
-  const sheet = await getSheetFromIdAndRange(spreadSheetId, range);
+interface ISendEmailsRequestBody {
+  spreadSheetId: string;
+  range: string;
+  message: string;
+  subject: string;
+}
 
-  // create message for each row
-  const rowsWithMessage = sheet.rows.map((row) => {
+interface IEmail {
+  to: string;
+  subject: string;
+  message: string;
+}
+
+const spreadSheetToEmails = (
+  sheet: IGoogleSheet,
+  template: { subject: string; message: string }
+): IEmail[] => {
+  const { subject, message } = template;
+
+  return sheet.rows.map((row) => {
+    const to = row["Email"];
+    const subjectLine = Template.createMessage(subject, row);
     const filledMessage = Template.createMessage(message, row);
+
     return {
-      ...row,
+      to,
+      subject: subjectLine,
       message: filledMessage,
     };
   });
+};
 
-  console.log(rowsWithMessage);
+app.post("/api/emails", async (req, res) => {
+  // const { spreadSheetId, range } = req.query as unknown as IGetSpreadSheetQuery;
+  const { subject, message, spreadSheetId, range } =
+    req.body as ISendEmailsRequestBody;
+
+  // get spreadsheet
+  console.log("importing spreadsheet");
+  const sheet = await getSheetFromIdAndRange(spreadSheetId, range);
+
+  console.log(sheet);
+
+  // create message for each row
+  console.log("creating emails");
+  const emails = spreadSheetToEmails(sheet, {
+    subject,
+    message,
+  });
+
+  console.log(emails);
+
+  await OutlookEmailSender.sendEmails(emails);
+
+  console.log("done!");
 
   return res.json({
-    hello: "asdfasdf",
+    emails,
   });
 });
 

@@ -8,7 +8,7 @@ interface IRawGoogleSheet {
   rows: any[][];
 }
 
-interface IGoogleSheet {
+export interface IGoogleSheet {
   id: string;
   range: string;
   headers: string[];

@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const google_sheets_1 = require("./apis/google-sheets");
 const template_1 = require("./template");
+const outlook_email_sender_1 = require("./outlook-email-sender");
 const app = (0, express_1.default)();
 // middleware
 app.use((0, cors_1.default)());
@@ -33,22 +34,37 @@ app.get("/api/spreadsheet", async (req, res) => {
         },
     });
 });
-app.post("/api/emails", async (req, res) => {
-    const { spreadSheetId, range } = req.query;
-    const { message } = req.body;
-    // get spreadsheet
-    const sheet = await getSheetFromIdAndRange(spreadSheetId, range);
-    // create message for each row
-    const rowsWithMessage = sheet.rows.map((row) => {
+const spreadSheetToEmails = (sheet, template) => {
+    const { subject, message } = template;
+    return sheet.rows.map((row) => {
+        const to = row["Email"];
+        const subjectLine = template_1.Template.createMessage(subject, row);
         const filledMessage = template_1.Template.createMessage(message, row);
         return {
-            ...row,
+            to,
+            subject: subjectLine,
             message: filledMessage,
         };
     });
-    console.log(rowsWithMessage);
+};
+app.post("/api/emails", async (req, res) => {
+    // const { spreadSheetId, range } = req.query as unknown as IGetSpreadSheetQuery;
+    const { subject, message, spreadSheetId, range } = req.body;
+    // get spreadsheet
+    console.log("importing spreadsheet");
+    const sheet = await getSheetFromIdAndRange(spreadSheetId, range);
+    console.log(sheet);
+    // create message for each row
+    console.log("creating emails");
+    const emails = spreadSheetToEmails(sheet, {
+        subject,
+        message,
+    });
+    console.log(emails);
+    await outlook_email_sender_1.OutlookEmailSender.sendEmails(emails);
+    console.log("done!");
     return res.json({
-        hello: "asdfasdf",
+        emails,
     });
 });
 const PORT = process.env.PORT || 8000;
