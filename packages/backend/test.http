@@ -6,7 +6,7 @@ Content-Type: application/json
 
 {
     "subject": "{{Name}} is your favorite color {{Color}}?",
-    "message": "Hello {{Name}}, it's Eric",
+    "body": "Hello {{Name}}, it's Eric",
     "spreadSheetId": "1RRC6MRwxZJzaLFHP0Xnn-tdbWv5bfLeW7QTcKD5ytLs",
     "range": "Sheet1"
 }

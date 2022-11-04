@@ -5,63 +5,42 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
-const google_sheets_1 = require("./apis/google-sheets");
+const sheet_to_email_1 = require("./sheet-to-email");
 const template_1 = require("./template");
-const outlook_email_sender_1 = require("./outlook-email-sender");
+const sheet_1 = require("./middleware/sheet");
 const app = (0, express_1.default)();
 // middleware
 app.use((0, cors_1.default)());
-// process json req body
 app.use(express_1.default.json());
-const GOOGLE_SHEETS_SECRETS_PATH = "./secrets.json";
-const getSheetFromIdAndRange = async (spreadSheetId, range) => {
-    // create google sheets api
-    const sheetsAPI = await google_sheets_1.GoogleSheets.createAPI(GOOGLE_SHEETS_SECRETS_PATH);
-    // get spread sheet
-    const sheet = await google_sheets_1.GoogleSheets.getSheet(sheetsAPI, {
-        id: spreadSheetId,
-        range,
-    });
-    return sheet;
-};
-app.get("/api/spreadsheet", async (req, res) => {
-    // get spreadsheet query params
-    const { spreadSheetId, range } = req.query;
-    const sheet = await getSheetFromIdAndRange(spreadSheetId, range);
+app.get("/api/spreadsheet", (0, sheet_1.getSheet)((req) => req.query), async (req, res) => {
+    const sheet = req.sheet;
     return res.json({
         data: {
             spreadsheet: sheet,
         },
     });
 });
-const spreadSheetToEmails = (sheet, template) => {
-    const { subject, message } = template;
-    return sheet.rows.map((row) => {
-        const to = row["Email"];
-        const subjectLine = template_1.Template.createMessage(subject, row);
-        const filledMessage = template_1.Template.createMessage(message, row);
-        return {
-            to,
-            subject: subjectLine,
-            message: filledMessage,
-        };
-    });
-};
-app.post("/api/emails", async (req, res) => {
-    // const { spreadSheetId, range } = req.query as unknown as IGetSpreadSheetQuery;
-    const { subject, message, spreadSheetId, range } = req.body;
+// create templating function -> {{variable}}
+const templateFill = template_1.Template.createFill((variable) => `{{${variable}}}`);
+// create spreadsheet to email converter
+const spreadSheetToEmails = (0, sheet_to_email_1.createSpreadSheetToEmails)("Email", templateFill);
+app.post("/api/emails", (0, sheet_1.getSheet)((req) => ({
+    spreadSheetId: req.body.spreadSheetId,
+    range: req.body.range,
+})), async (req, res) => {
+    const { subject, body } = req.body;
     // get spreadsheet
     console.log("importing spreadsheet");
-    const sheet = await getSheetFromIdAndRange(spreadSheetId, range);
+    const sheet = req.sheet;
     console.log(sheet);
     // create message for each row
     console.log("creating emails");
     const emails = spreadSheetToEmails(sheet, {
         subject,
-        message,
+        body,
     });
     console.log(emails);
-    await outlook_email_sender_1.OutlookEmailSender.sendEmails(emails);
+    // await OutlookEmailSender.sendEmails(emails);
     console.log("done!");
     return res.json({
         emails,
