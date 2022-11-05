@@ -5,6 +5,7 @@ import { OutlookEmailSender } from "./outlook-email-sender";
 import { createSpreadSheetToEmails } from "./sheet-to-email";
 import { Template } from "./template";
 import { getSheet } from "./middleware/sheet";
+import { Middleware } from "./middleware";
 
 const app = express();
 
@@ -17,67 +18,21 @@ interface ISpreadSheetParams {
   range: string;
 }
 
+// getting spreadsheet
 app.get(
   "/api/spreadsheet",
   getSheet((req) => req.query as unknown as ISpreadSheetParams),
-  async (req, res) => {
-    const sheet = (req as any).sheet as IGoogleSheet;
-
-    return res.json({
-      data: {
-        spreadsheet: sheet,
-      },
-    });
-  }
+  Middleware.getSpreadSheet
 );
 
-//
-
-interface ISendEmailsRequestBody {
-  spreadSheetId: string;
-  range: string;
-  body: string;
-  subject: string;
-}
-
-// create templating function -> {{variable}}
-const templateFill = Template.createFill((variable) => `{{${variable}}}`);
-
-// create spreadsheet to email converter
-const spreadSheetToEmails = createSpreadSheetToEmails("Email", templateFill);
-
+// send emails
 app.post(
   "/api/emails",
   getSheet((req) => ({
     spreadSheetId: req.body.spreadSheetId,
     range: req.body.range,
   })),
-  async (req, res) => {
-    const { subject, body } = req.body as ISendEmailsRequestBody;
-
-    // get spreadsheet
-    console.log("importing spreadsheet");
-    const sheet = (req as any).sheet as IGoogleSheet;
-
-    console.log(sheet);
-
-    // create message for each row
-    console.log("creating emails");
-    const emails = spreadSheetToEmails(sheet, {
-      subject,
-      body,
-    });
-
-    console.log(emails);
-
-    await OutlookEmailSender.sendEmails(emails);
-
-    console.log("done!");
-
-    return res.json({
-      emails,
-    });
-  }
+  Middleware.sendEmails
 );
 
 const PORT = process.env.PORT || 8000;
