@@ -1,9 +1,5 @@
 import express from "express";
 import cors from "cors";
-import { IGoogleSheet } from "./apis/google-sheets";
-import { OutlookEmailSender } from "./outlook-email-sender";
-import { createSpreadSheetToEmails } from "./sheet-to-email";
-import { Template } from "./template";
 import { getSheet } from "./middleware/sheet";
 import { Middleware } from "./middleware";
 
