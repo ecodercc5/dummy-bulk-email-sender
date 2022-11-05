@@ -1,91 +1,94 @@
 import puppeteer from "puppeteer";
+import { IEmail } from "./email";
 
-const sendEmails_ = async (page: puppeteer.Page, emails: any[]) => {
+const type = async (page: puppeteer.Page, selector: string, text: string) => {
+  const element = await page.waitForSelector(selector);
+
+  await element?.type(text);
+};
+
+const clickNewMail = async (page: puppeteer.Page) => {
+  return page.evaluate(async () => {
+    const dataAutomationButtons = Array.from(
+      document.querySelectorAll(
+        `button[data-automation-type="RibbonSplitButton"]`
+      )
+    );
+
+    const newMailBtn = dataAutomationButtons.find((btn: any) => {
+      return btn.innerText.includes("New mail");
+    });
+
+    (newMailBtn as HTMLElement).click();
+  });
+};
+
+const clickSend = async (page: puppeteer.Page) => {
+  return page.evaluate(async () => {
+    const buttons = Array.from(document.querySelectorAll("button"));
+
+    const sendBtn = buttons.find((btn: any) => {
+      return btn.title === "Send (⌘+Enter)";
+    });
+
+    (sendBtn as HTMLElement).click();
+  });
+};
+
+const sendEmail = async (page: puppeteer.Page, email: IEmail) => {
+  const { to, subject, body } = email;
+
+  await clickNewMail(page);
+
+  await type(page, `div[contenteditable="true"][aria-label="To"]`, to);
+  await type(page, `input[aria-label="Add a subject"]`, subject);
+  await type(
+    page,
+    `div[contenteditable="true"][aria-label="Message body, press Alt+F10 to exit"]`,
+    body
+  );
+
+  await clickSend(page);
+
+  await new Promise((r) => setTimeout(r, 2000));
+};
+
+const sendAllEmails = async (page: puppeteer.Page, emails: IEmail[]) => {
   for (const email of emails) {
-    const { to, subject, message } = email;
-
-    await page.evaluate(async () => {
-      const dataAutomationButtons = Array.from(
-        document.querySelectorAll(
-          `button[data-automation-type="RibbonSplitButton"]`
-        )
-      );
-
-      const newMailBtn = dataAutomationButtons.find((btn: any) => {
-        return btn.innerText.includes("New mail");
-      });
-
-      (newMailBtn as HTMLElement).click();
-    });
-
-    const toInput = await page.waitForSelector(
-      `div[contenteditable="true"][aria-label="To"]`
-    );
-
-    await toInput?.type(to);
-
-    const subjectInput = await page.waitForSelector(
-      `input[aria-label="Add a subject"]`
-    );
-
-    await subjectInput?.type(subject);
-
-    const bodyInput = await page.waitForSelector(
-      `div[contenteditable="true"][aria-label="Message body, press Alt+F10 to exit"]`
-    );
-
-    await bodyInput?.type(message);
-
-    await page.evaluate(async () => {
-      const buttons = Array.from(document.querySelectorAll("button"));
-
-      const sendBtn = buttons.find((btn: any) => {
-        return btn.title === "Send (⌘+Enter)";
-      });
-
-      (sendBtn as HTMLElement).click();
-    });
-
-    await new Promise((r) => setTimeout(r, 2000));
+    await sendEmail(page, email);
   }
 };
 
+const launchOutlook = async () => {
+  const browser = await puppeteer.launch({ headless: false });
+  const page = await browser.newPage();
+  await page.goto("https://outlook.office.com/mail/");
+
+  return page;
+};
+
+const getIntoOutlookAuth = async (page: puppeteer.Page, email: string) => {
+  // login into
+  const emailInput = await page.waitForSelector(`input[type="email"]`);
+  const submitEmail = await page.waitForSelector(`input[type="submit"]`);
+
+  await emailInput?.type(email);
+
+  await Promise.all([
+    await submitEmail?.click(),
+    await page.waitForNavigation(),
+  ]);
+};
+
 export namespace OutlookEmailSender {
-  export const sendEmails = async (emails: any[]) => {
-    const browser = await puppeteer.launch({ headless: false });
-    const page = await browser.newPage();
-    await page.goto("https://outlook.office.com/mail/");
+  export const sendEmails = async (emails: IEmail[]) => {
+    const page = await launchOutlook();
 
-    // login into
-    const emailInput = await page.waitForSelector(`input[type="email"]`);
-    const submitEmail = await page.waitForSelector(`input[type="submit"]`);
+    // get into outlook auth
+    await getIntoOutlookAuth(page, "eric25@mit.edu");
 
-    await emailInput?.type("eric25@mit.edu");
-
-    console.log("yo");
-    await Promise.all([
-      await submitEmail?.click(),
-
-      await page.waitForNavigation(),
-    ]);
-
-    // touchstone login
-
+    // wait for touchstone login
     await new Promise((r) => setTimeout(r, 5000));
-
-    // const mitKerbInput = await page.waitForSelector(`input[name="j_username"]`);
-    // const mitKerbPassword = await page.waitForSelector(
-    //   `input[name="j_password"]`
-    // );
-    // const submitKerb = await page.waitForSelector(`input[type="submit"]`);
-
-    // console.log(mitKerbInput);
-
-    //   await new Promise((r) => setTimeout(r, 3000));
-    //   await submitKerb?.click();
-
-    // bypass security
-    //   await new Promise((r) => setTimeout(r, 20000));
 
     await page.waitForFunction(
       "window.location.href === 'https://outlook.office.com/mail/'"
@@ -93,8 +96,8 @@ export namespace OutlookEmailSender {
 
     await new Promise((r) => setTimeout(r, 5000));
 
-    console.log("sending emails");
+    console.log("[sending emails]");
 
-    await sendEmails_(page, emails);
+    await sendAllEmails(page, emails);
   };
 }

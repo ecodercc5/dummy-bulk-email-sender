@@ -70,7 +70,7 @@ app.post(
 
     console.log(emails);
 
-    // await OutlookEmailSender.sendEmails(emails);
+    await OutlookEmailSender.sendEmails(emails);
 
     console.log("done!");
 

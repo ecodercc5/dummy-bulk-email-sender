@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
+const outlook_email_sender_1 = require("./outlook-email-sender");
 const sheet_to_email_1 = require("./sheet-to-email");
 const template_1 = require("./template");
 const sheet_1 = require("./middleware/sheet");
@@ -40,7 +41,7 @@ app.post("/api/emails", (0, sheet_1.getSheet)((req) => ({
         body,
     });
     console.log(emails);
-    // await OutlookEmailSender.sendEmails(emails);
+    await outlook_email_sender_1.OutlookEmailSender.sendEmails(emails);
     console.log("done!");
     return res.json({
         emails,
