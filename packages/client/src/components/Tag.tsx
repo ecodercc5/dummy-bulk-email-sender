@@ -1,7 +1,23 @@
 import React from "react";
 
-type Props = {};
+interface Props
+  extends React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLSpanElement>,
+    HTMLSpanElement
+  > {}
 
-export const Tag = (props: Props) => {
-  return <div>Tag</div>;
+export const Tag: React.FC<React.PropsWithChildren<Props>> = ({
+  children,
+  className,
+  ...props
+}) => {
+  return (
+    <span
+      className={`tag flex justify-center items-center px-3 h-7 bg-light-gray-24 
+                 rounded-full text-base font-medium text-blue-gray cursor-pointer ${className}`}
+      {...props}
+    >
+      {children}
+    </span>
+  );
 };

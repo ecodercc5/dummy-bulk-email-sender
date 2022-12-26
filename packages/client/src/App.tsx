@@ -6,10 +6,15 @@ import { SelectButton } from "./components/SelectButton";
 import * as Select from "@radix-ui/react-select";
 import { SelectItem } from "./components/SelectItem";
 import { Card } from "./components/Card";
+import { Tag } from "./components/Tag";
+import { Progress, Wizard } from "./components/Wizard";
+import { ImportSpreadSheetCard } from "./containers/ImportSpreadSheetCard";
 
 function App() {
   return (
     <div className="App flex justify-center items-center">
+      <ImportSpreadSheetCard />
+
       {/* <Select.Root>
         <SelectButton />
 
@@ -25,7 +30,9 @@ function App() {
         </Select.Content>
       </Select.Root> */}
 
-      <Card>Card</Card>
+      {/* <Wizard numSteps={2} stepLabels={["Hello World", "Goodbye World"]} /> */}
+      {/* <Progress /> */}
+      {/* <Tag>Name</Tag> */}
     </div>
   );
 }

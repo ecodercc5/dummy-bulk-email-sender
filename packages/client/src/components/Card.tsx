@@ -12,10 +12,7 @@ export const Card: React.FC<React.PropsWithChildren<Props>> = ({
   ...props
 }) => {
   return (
-    <div
-      className={`card bg-white rounded-lg w-[300px] h-[300px] ${className}`}
-      {...props}
-    >
+    <div className={`card bg-white rounded-lg ${className}`} {...props}>
       {children}
     </div>
   );
