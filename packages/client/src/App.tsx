@@ -9,11 +9,25 @@ import { Card } from "./components/Card";
 import { Tag } from "./components/Tag";
 import { Progress, Wizard } from "./components/Wizard";
 import { ImportSpreadSheetCard } from "./containers/ImportSpreadSheetCard";
+import { SelectSpreadsheetCard } from "./containers/SelectSpreadsheetCard";
+import { WriteEmailCard } from "./containers/WriteEmailCard";
+import { EmailWriter } from "./components/EmailWriter";
+import { EmailInput } from "./components/EmailInput";
+import { Divider } from "./components/Divider";
 
 function App() {
   return (
     <div className="App flex justify-center items-center">
-      <ImportSpreadSheetCard />
+      {/* <ImportSpreadSheetCard /> */}
+      {/* <SelectSpreadsheetCard /> */}
+
+      {/* <WriteEmailCard /> */}
+
+      <EmailWriter />
+
+      {/* <EmailInput label="To" /> */}
+
+      {/* <Divider /> */}
 
       {/* <Select.Root>
         <SelectButton />
@@ -33,6 +47,26 @@ function App() {
       {/* <Wizard numSteps={2} stepLabels={["Hello World", "Goodbye World"]} /> */}
       {/* <Progress /> */}
       {/* <Tag>Name</Tag> */}
+
+      {/* <table className="rounded-md">
+        <thead>
+          <tr>
+            <th scope="col">Email</th>
+            <th scope="col">Name</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>eric25@mit.edu</td>
+            <td>Eric Chen</td>
+          </tr>
+          <tr>
+            <td>sam@mit.edu</td>
+            <td>Sam Postelnik</td>
+          </tr>
+        </tbody>
+      </table> */}
     </div>
   );
 }

@@ -101,3 +101,51 @@ body,
 .tag:active {
   background: rgba(110, 117, 138, 0.24);
 }
+
+.left-img {
+  border-radius: 0 6px 6px 0;
+}
+
+/* Table Styles */
+table {
+  width: 95%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  box-shadow: 0 0 0 1px rgba(110, 117, 138, 0.24),
+    0px 3px 24px 8px rgba(37, 37, 46, 0.06);
+  overflow: hidden;
+  font-size: 16px;
+}
+
+th {
+  background: theme("colors.light-gray");
+  color: theme("colors.main-black");
+  font-weight: 700;
+}
+
+th,
+td {
+  text-align: left;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid theme("colors.light-gray-24");
+  color: theme("colors.main-black");
+}
+
+th {
+  border-top: none;
+}
+
+td {
+  border-bottom: none;
+}
+
+tr th:first-child,
+td:first-child {
+  border-left: none;
+}
+
+tr th:last-child,
+td:last-child {
+  border-right: none;
+}
