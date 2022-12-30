@@ -1,14 +1,18 @@
 import React from "react";
 import { EmailInput } from "./EmailInput";
 
-interface Props {}
+interface Props
+  extends React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLDivElement>,
+    HTMLDivElement
+  > {}
 
-export const EmailWriter: React.FC<Props> = () => {
+export const EmailWriter: React.FC<Props> = ({ className, ...props }) => {
   return (
-    <div className="">
+    <div className={`flex flex-col ${className}`} {...props}>
       <EmailInput withDivider label="To" />
       <EmailInput withDivider label="Subject" />
-      <EmailInput variant="textarea" label="Compose Email" />
+      <EmailInput className="h-full" variant="textarea" label="Compose Email" />
     </div>
   );
 };

@@ -14,6 +14,8 @@ import { WriteEmailCard } from "./containers/WriteEmailCard";
 import { EmailWriter } from "./components/EmailWriter";
 import { EmailInput } from "./components/EmailInput";
 import { Divider } from "./components/Divider";
+import { PreviewTableCard } from "./containers/PreviewTableCard";
+import { SummaryCard } from "./containers/SummaryCard";
 
 function App() {
   return (
@@ -21,9 +23,13 @@ function App() {
       {/* <ImportSpreadSheetCard /> */}
       {/* <SelectSpreadsheetCard /> */}
 
+      <SummaryCard />
+
+      {/* <PreviewTableCard /> */}
+
       {/* <WriteEmailCard /> */}
 
-      <EmailWriter />
+      {/* <EmailWriter /> */}
 
       {/* <EmailInput label="To" /> */}
 

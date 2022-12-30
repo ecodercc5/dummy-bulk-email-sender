@@ -14,7 +14,7 @@ import { Divider } from "../components/Divider";
 
 interface Props {}
 
-export const WriteEmailCard: React.FC<Props> = () => {
+export const SummaryCard: React.FC<Props> = () => {
   return (
     <Card className="relative flex w-full max-w-[974px] h-[584px]">
       <div className="flex flex-col justify-between px-7 pt-9 pb-7 w-full h-full">
@@ -27,27 +27,45 @@ export const WriteEmailCard: React.FC<Props> = () => {
             </div>
 
             <div className="flex flex-col gap-2">
-              <h1 className="text-[22px] font-bold text-main-black">
-                Write Email
-              </h1>
+              <h1 className="text-[22px] font-bold text-main-black">Summary</h1>
               <p className="text-lg text-blue-gray">
-                Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit
-                amet consectetur.
+                Review your contacts and emails before bulk sending
               </p>
             </div>
-          </div>
-
-          <div className="flex gap-2">
-            {["email", "name", "phone-number", "company"].map((name) => {
-              return <Tag key={name}>{name}</Tag>;
-            })}
           </div>
         </div>
 
         <div>
-          <Button variant="secondary" size="lg">
-            Preview Emails
-          </Button>
+          <div className="flex">
+            <div>
+              <h6>Sheet Link</h6>
+              <p>
+                https://docs.google.com/spreadsheets/d/1RRC6MRwxZJzaLFHP0Xnn-tdbWv5bfLeW7QTcKD5ytLs/edit#gid=0
+              </p>
+            </div>
+
+            <Button variant="secondary">Edit</Button>
+          </div>
+          <div className="flex">
+            <div>
+              <h6>Sheet Link</h6>
+              <p>
+                https://docs.google.com/spreadsheets/d/1RRC6MRwxZJzaLFHP0Xnn-tdbWv5bfLeW7QTcKD5ytLs/edit#gid=0
+              </p>
+            </div>
+
+            <Button variant="secondary">Edit</Button>
+          </div>
+          <div className="flex">
+            <div>
+              <h6>Sheet Link</h6>
+              <p>
+                https://docs.google.com/spreadsheets/d/1RRC6MRwxZJzaLFHP0Xnn-tdbWv5bfLeW7QTcKD5ytLs/edit#gid=0
+              </p>
+            </div>
+
+            <Button variant="secondary">Edit</Button>
+          </div>
         </div>
       </div>
 
