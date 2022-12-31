@@ -4,37 +4,33 @@ import { ArrowUpTrayIcon, UserGroupIcon } from "@heroicons/react/24/outline";
 import { IconInput } from "../components/IconInput";
 import { Button } from "../components/Button";
 import { SMALL_ICON } from "../icon-styles";
+import { InstructionSection } from "../components/InstructionSection";
 
 interface Props {}
+
+const text = (
+  <>
+    Copy and paste your{" "}
+    <span className="text-[#00A95E]">
+      <img
+        className="h-4 inline-flex items-center"
+        src="https://lh3.ggpht.com/e3oZddUHSC6EcnxC80rl_6HbY94sM63dn6KrEXJ-C4GIUN-t1XM0uYA_WUwyhbIHmVMH=w300"
+      />{" "}
+      google sheet link
+    </span>{" "}
+    here to get started
+  </>
+);
 
 export const ImportSpreadSheetCard: React.FC<Props> = () => {
   return (
     <Card className="flex w-full max-w-[974px] h-[584px]">
       <div className="flex flex-col justify-between px-7 pt-9 pb-7 w-full h-full">
-        <div className="flex flex-col gap-7">
-          <div
-            className={`icon-card bg-white rounded-lg flex justify-center items-center`}
-          >
-            <UserGroupIcon className="w-9 h-9 stroke-blue-gray" />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <h1 className="text-[22px] font-bold text-main-black">
-              Import Your Contacts
-            </h1>
-            <p className="text-lg text-blue-gray">
-              Copy and paste your{" "}
-              <span className="text-[#00A95E]">
-                <img
-                  className="h-4 inline-flex items-center"
-                  src="https://lh3.ggpht.com/e3oZddUHSC6EcnxC80rl_6HbY94sM63dn6KrEXJ-C4GIUN-t1XM0uYA_WUwyhbIHmVMH=w300"
-                />{" "}
-                google sheet link
-              </span>{" "}
-              here to get started
-            </p>
-          </div>
-        </div>
+        <InstructionSection
+          icon={UserGroupIcon}
+          header="Import Your Contacts"
+          text={text}
+        />
 
         <div>
           <IconInput

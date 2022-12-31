@@ -22,12 +22,8 @@ import { SuccessCard } from "./containers/SuccessCard";
 function App() {
   return (
     <div className="App flex justify-center items-center">
-      {/* <ImportSpreadSheetCard /> */}
+      <ImportSpreadSheetCard />
       {/* <SelectSpreadsheetCard /> */}
-
-      <Button disabled size="lg">
-        Click Me
-      </Button>
 
       {/* <SuccessCard /> */}
 
