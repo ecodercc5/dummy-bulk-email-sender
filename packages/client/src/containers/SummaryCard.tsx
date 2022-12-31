@@ -11,13 +11,14 @@ import { SMALL_ICON } from "../icon-styles";
 import { Tag } from "../components/Tag";
 import { EmailWriter } from "../components/EmailWriter";
 import { Divider } from "../components/Divider";
+import { SummaryDetail } from "../components/SummaryDetail";
 
 interface Props {}
 
 export const SummaryCard: React.FC<Props> = () => {
   return (
     <Card className="relative flex w-full max-w-[974px] h-[584px]">
-      <div className="flex flex-col justify-between px-7 pt-9 pb-7 w-full h-full">
+      <div className="flex flex-col justify-between px-7 pt-9 pb-7 w-1/2 h-full">
         <div className="flex flex-col gap-9">
           <div className="flex flex-col gap-7">
             <div
@@ -35,43 +36,20 @@ export const SummaryCard: React.FC<Props> = () => {
           </div>
         </div>
 
-        <div>
-          <div className="flex">
-            <div>
-              <h6>Sheet Link</h6>
-              <p>
-                https://docs.google.com/spreadsheets/d/1RRC6MRwxZJzaLFHP0Xnn-tdbWv5bfLeW7QTcKD5ytLs/edit#gid=0
-              </p>
-            </div>
-
-            <Button variant="secondary">Edit</Button>
-          </div>
-          <div className="flex">
-            <div>
-              <h6>Sheet Link</h6>
-              <p>
-                https://docs.google.com/spreadsheets/d/1RRC6MRwxZJzaLFHP0Xnn-tdbWv5bfLeW7QTcKD5ytLs/edit#gid=0
-              </p>
-            </div>
-
-            <Button variant="secondary">Edit</Button>
-          </div>
-          <div className="flex">
-            <div>
-              <h6>Sheet Link</h6>
-              <p>
-                https://docs.google.com/spreadsheets/d/1RRC6MRwxZJzaLFHP0Xnn-tdbWv5bfLeW7QTcKD5ytLs/edit#gid=0
-              </p>
-            </div>
-
-            <Button variant="secondary">Edit</Button>
-          </div>
+        <div className="flex flex-col gap-6">
+          <SummaryDetail
+            edittable
+            label="Sheet Link"
+            detail="https://docs.google.com/spreadsheets/d/1RRC6MRwxZJzaLFHP0Xnn-tdbWv5bfLeW7QTcKD5ytLs/edit#gid=0"
+          />
+          <SummaryDetail edittable label="Sheet Name" detail="Sheet 1" />
+          <SummaryDetail label="Number of Contacts" detail="25" />
         </div>
       </div>
 
       <Divider variant="vertical" />
 
-      <div className="flex flex-col pt-5 pb-7 px-7 left-img w-full">
+      <div className="flex flex-col pt-5 pb-7 px-7 left-img w-full flex-1">
         <EmailWriter className="w-full h-full" />
       </div>
 
@@ -79,7 +57,7 @@ export const SummaryCard: React.FC<Props> = () => {
         <Button variant="secondary" size="lg">
           Back
         </Button>
-        <Button size="lg">Continue</Button>
+        <Button size="lg">Send Emails</Button>
       </div>
     </Card>
   );

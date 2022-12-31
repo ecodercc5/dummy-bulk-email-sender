@@ -1,4 +1,5 @@
 import React from "react";
+import classNames from "classnames";
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -27,13 +28,23 @@ export const Button: React.FC<React.PropsWithChildren<Props>> = ({
   variant = "primary",
   size = "default",
   className: class_,
+  disabled,
   ...buttonProps
 }) => {
   const className = `${variants[variant]} ${sizes[size]} font-medium rounded-md px-3 ${class_}`;
 
+  const c = classNames(
+    variants[variant],
+    sizes[size],
+    "font-medium rounded-md px-3",
+    class_
+  );
+
+  const textOpacity = disabled ? "opacity-50" : null;
+
   return (
-    <button className={className} {...buttonProps}>
-      {children}
+    <button disabled={disabled} className={c} {...buttonProps}>
+      <span className={classNames(textOpacity)}>{children}</span>
     </button>
   );
 };

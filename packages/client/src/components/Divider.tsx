@@ -12,7 +12,7 @@ interface Props
 
 const variants = {
   horizontal: "h-px w-full",
-  vertical: "h-full w-0.5",
+  vertical: "h-full w-px",
 };
 
 export const Divider: React.FC<Props> = ({

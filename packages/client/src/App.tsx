@@ -16,6 +16,8 @@ import { EmailInput } from "./components/EmailInput";
 import { Divider } from "./components/Divider";
 import { PreviewTableCard } from "./containers/PreviewTableCard";
 import { SummaryCard } from "./containers/SummaryCard";
+import { SummaryDetail } from "./components/SummaryDetail";
+import { SuccessCard } from "./containers/SuccessCard";
 
 function App() {
   return (
@@ -23,7 +25,18 @@ function App() {
       {/* <ImportSpreadSheetCard /> */}
       {/* <SelectSpreadsheetCard /> */}
 
-      <SummaryCard />
+      <Button disabled size="lg">
+        Click Me
+      </Button>
+
+      {/* <SuccessCard /> */}
+
+      {/* <SummaryCard /> */}
+
+      {/* <SummaryDetail
+        label="Sheet Link"
+        detail="https://docs.google.com/spreadsheets/d/1RRC6MRwxZJzaLFHP0Xnn-tdbWv5bfLeW7QTcKD5ytLs/edit#gid=0"
+      /> */}
 
       {/* <PreviewTableCard /> */}
 
