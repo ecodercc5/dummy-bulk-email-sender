@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "../components/Card";
 import { ArrowUpTrayIcon, UserGroupIcon } from "@heroicons/react/24/outline";
 import { IconInput } from "../components/IconInput";
 import { Button } from "../components/Button";
 import { SMALL_ICON } from "../icon-styles";
 import { InstructionSection } from "../components/InstructionSection";
+import useSWR from "swr";
 
 interface Props {}
 
@@ -22,9 +23,18 @@ const text = (
   </>
 );
 
+const fetcher = async () => {
+  return ["Sheet 1", "Sheet 2"];
+};
+
 export const ImportSpreadSheetCard: React.FC<Props> = () => {
+  const [googleSheetLink, setGoogleSheetLink] = useState("");
+  const [shouldFetch, setShouldFetch] = useState(false);
+
   return (
     <Card className="flex w-full max-w-[974px] h-[584px]">
+      {shouldFetch && <Fetcher link={googleSheetLink} />}
+
       <div className="flex flex-col justify-between px-7 pt-9 pb-7 w-full h-full">
         <InstructionSection
           icon={UserGroupIcon}
@@ -32,13 +42,22 @@ export const ImportSpreadSheetCard: React.FC<Props> = () => {
           text={text}
         />
 
-        <div>
+        <div className="flex flex-col items-stretch">
           <IconInput
+            value={googleSheetLink}
             className="w-full"
             placeholder="Paste your google sheet link"
             icon={<ArrowUpTrayIcon className={SMALL_ICON} />}
+            onChange={(e) => setGoogleSheetLink(e.target.value)}
           />
-          <Button className="w-full mt-4" size="lg">
+          <Button
+            className="mt-4"
+            size="lg"
+            onClick={() => {
+              console.log("asdfasdf");
+              setShouldFetch(true);
+            }}
+          >
             Import
           </Button>
         </div>
@@ -49,4 +68,12 @@ export const ImportSpreadSheetCard: React.FC<Props> = () => {
       </div>
     </Card>
   );
+};
+
+const Fetcher: React.FC<{ link: string }> = ({ link }) => {
+  const { data } = useSWR(["/api/spreadsheets", link], fetcher);
+
+  console.log(data);
+
+  return null;
 };

@@ -16,7 +16,7 @@ interface ISpreadSheetParams {
 
 // getting spreadsheet
 app.get(
-  "/api/spreadsheet",
+  "/api/spreadsheets",
   getSheet((req) => req.query as unknown as ISpreadSheetParams),
   Middleware.getSpreadSheet
 );

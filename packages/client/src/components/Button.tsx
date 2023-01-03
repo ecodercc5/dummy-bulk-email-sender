@@ -31,19 +31,17 @@ export const Button: React.FC<React.PropsWithChildren<Props>> = ({
   disabled,
   ...buttonProps
 }) => {
-  const className = `${variants[variant]} ${sizes[size]} font-medium rounded-md px-3 ${class_}`;
-
-  const c = classNames(
+  const className = classNames(
     variants[variant],
     sizes[size],
-    "font-medium rounded-md px-3",
+    "font-medium rounded-md px-3 flex justify-center items-center cursor-pointer",
     class_
   );
 
   const textOpacity = disabled ? "opacity-50" : null;
 
   return (
-    <button disabled={disabled} className={c} {...buttonProps}>
+    <button disabled={disabled} className={className} {...buttonProps}>
       <span className={classNames(textOpacity)}>{children}</span>
     </button>
   );

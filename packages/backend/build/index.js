@@ -12,7 +12,7 @@ const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 // getting spreadsheet
-app.get("/api/spreadsheet", (0, sheet_1.getSheet)((req) => req.query), middleware_1.Middleware.getSpreadSheet);
+app.get("/api/spreadsheets", (0, sheet_1.getSheet)((req) => req.query), middleware_1.Middleware.getSpreadSheet);
 // send emails
 app.post("/api/emails", (0, sheet_1.getSheet)((req) => ({
     spreadSheetId: req.body.spreadSheetId,

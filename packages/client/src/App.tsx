@@ -25,7 +25,7 @@ function App() {
     <>
       <Background className="w-full h-full"></Background>
       <div className="App relative flex justify-center items-center">
-        <Select.Root>
+        {/* <Select.Root>
           <SelectButton />
 
           <Select.Content className="SelectContent">
@@ -38,9 +38,9 @@ function App() {
               <Select.Separator />
             </Select.Viewport>
           </Select.Content>
-        </Select.Root>
+        </Select.Root> */}
         {/* <SelectSpreadsheetCard /> */}
-        {/* <ImportSpreadSheetCard /> */}
+        <ImportSpreadSheetCard />
 
         {/* <SuccessCard /> */}
 
