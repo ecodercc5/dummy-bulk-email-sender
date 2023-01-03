@@ -34,16 +34,13 @@ export const SelectSpreadsheetCard: React.FC<Props> = () => {
         </div>
 
         <Select.Root>
-          <SelectButton className="w-full" />
+          <SelectButton />
 
           <Select.Content className="select-content">
             <Select.Viewport className="select-viewport bg-white rounded-md min-h-11 p-1 gap-0.5">
               <Select.Group>
-                {/* <SelectItem value="asdf">Hello</SelectItem>
-                <SelectItem value="qwer">World</SelectItem> */}
-                <Select.Item value="asdfasdf">
-                  <Select.ItemText>Hello</Select.ItemText>
-                </Select.Item>
+                <SelectItem value="asdf">Hello</SelectItem>
+                <SelectItem value="qwer">World</SelectItem>
               </Select.Group>
 
               <Select.Separator />

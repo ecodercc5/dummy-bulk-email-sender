@@ -18,33 +18,50 @@ import { PreviewTableCard } from "./containers/PreviewTableCard";
 import { SummaryCard } from "./containers/SummaryCard";
 import { SummaryDetail } from "./components/SummaryDetail";
 import { SuccessCard } from "./containers/SuccessCard";
+import Background from "./components/Background";
 
 function App() {
   return (
-    <div className="App flex justify-center items-center">
-      <ImportSpreadSheetCard />
-      {/* <SelectSpreadsheetCard /> */}
+    <>
+      <Background className="w-full h-full"></Background>
+      <div className="App relative flex justify-center items-center">
+        <Select.Root>
+          <SelectButton />
 
-      {/* <SuccessCard /> */}
+          <Select.Content className="SelectContent">
+            <Select.Viewport className="SelectViewport">
+              <Select.Group>
+                <SelectItem value="asdf">Hello</SelectItem>
+                <SelectItem value="qwer">World</SelectItem>
+              </Select.Group>
 
-      {/* <SummaryCard /> */}
+              <Select.Separator />
+            </Select.Viewport>
+          </Select.Content>
+        </Select.Root>
+        {/* <SelectSpreadsheetCard /> */}
+        {/* <ImportSpreadSheetCard /> */}
 
-      {/* <SummaryDetail
+        {/* <SuccessCard /> */}
+
+        {/* <SummaryCard /> */}
+
+        {/* <SummaryDetail
         label="Sheet Link"
         detail="https://docs.google.com/spreadsheets/d/1RRC6MRwxZJzaLFHP0Xnn-tdbWv5bfLeW7QTcKD5ytLs/edit#gid=0"
       /> */}
 
-      {/* <PreviewTableCard /> */}
+        {/* <PreviewTableCard /> */}
 
-      {/* <WriteEmailCard /> */}
+        {/* <WriteEmailCard /> */}
 
-      {/* <EmailWriter /> */}
+        {/* <EmailWriter /> */}
 
-      {/* <EmailInput label="To" /> */}
+        {/* <EmailInput label="To" /> */}
 
-      {/* <Divider /> */}
+        {/* <Divider /> */}
 
-      {/* <Select.Root>
+        {/* <Select.Root>
         <SelectButton />
 
         <Select.Content className="select-content bg-white rounded-md min-h-11">
@@ -59,11 +76,11 @@ function App() {
         </Select.Content>
       </Select.Root> */}
 
-      {/* <Wizard numSteps={2} stepLabels={["Hello World", "Goodbye World"]} /> */}
-      {/* <Progress /> */}
-      {/* <Tag>Name</Tag> */}
+        {/* <Wizard numSteps={2} stepLabels={["Hello World", "Goodbye World"]} /> */}
+        {/* <Progress /> */}
+        {/* <Tag>Name</Tag> */}
 
-      {/* <table className="rounded-md">
+        {/* <table className="rounded-md">
         <thead>
           <tr>
             <th scope="col">Email</th>
@@ -82,7 +99,8 @@ function App() {
           </tr>
         </tbody>
       </table> */}
-    </div>
+      </div>
+    </>
   );
 }
 
