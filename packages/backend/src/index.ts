@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { getSheet } from "./middleware/sheet";
 import { Middleware } from "./middleware";
+import { GoogleSheets } from "./apis/google-sheets";
 
 const app = express();
 
@@ -20,6 +21,41 @@ app.get(
   getSheet((req) => req.query as unknown as ISpreadSheetParams),
   Middleware.getSpreadSheet
 );
+
+// gettting sheet from spreadsheets
+app.get("/api/spreadsheets/:spreadSheetId/sheets/:gid", async (req, res) => {
+  const { spreadSheetId, gid } = req.params;
+  const sheetsAPI = await GoogleSheets.createAPI("./secrets.json");
+
+  try {
+    // get spreadsheet
+    const getSpreadhSheetsRes = await sheetsAPI.spreadsheets.get({
+      spreadsheetId: spreadSheetId,
+    });
+
+    const sheets = getSpreadhSheetsRes.data.sheets!;
+    // get name of sheet with corresponding gid
+    const sheet = sheets.find((sh) => {
+      return sh.properties?.sheetId === Number(gid);
+    });
+
+    const sheetTitle = sheet?.properties?.title!;
+
+    // get the values from spreadsheet
+    const sheetData = await GoogleSheets.getSheet(sheetsAPI, {
+      id: spreadSheetId,
+      range: sheetTitle,
+    });
+
+    return res.json({
+      data: {
+        sheet: sheetData,
+      },
+    });
+  } catch {
+    return res.status(400).json({ error: "Bad Request" });
+  }
+});
 
 // send emails
 app.post(

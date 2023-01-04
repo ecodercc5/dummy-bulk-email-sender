@@ -10,3 +10,9 @@ Content-Type: application/json
     "spreadSheetId": "1RRC6MRwxZJzaLFHP0Xnn-tdbWv5bfLeW7QTcKD5ytLs",
     "range": "Sheet1"
 }
+
+###
+GET http://localhost:8000/api/spreadsheets/1RRC6MRwxZJzaLFHP0Xnn-tdbWv5bfLeW7QTcKD5ytLs/sheets
+
+###
+GET http://localhost:8000/api/spreadsheets/1RRC6MRwxZJzaLFHP0Xnn-tdbWv5bfLeW7QTcKD5ytLs/sheets/0
