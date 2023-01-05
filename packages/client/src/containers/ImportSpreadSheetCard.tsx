@@ -6,6 +6,8 @@ import { Button } from "../components/Button";
 import { SMALL_ICON } from "../icon-styles";
 import { InstructionSection } from "../components/InstructionSection";
 import useSWR from "swr";
+import { getSpreadSheet } from "../api";
+import { useStateStore } from "../hooks/state-store";
 
 interface Props {}
 
@@ -23,70 +25,24 @@ const text = (
   </>
 );
 
-const link =
-  "https://docs.google.com/spreadsheets/u/1/d/1RRC6MRwxZJzaLFHP0Xnn-tdbWv5bfLeW7QTcKD5ytLs/edit#gid=0";
-
-// ("/spreadsheets/u/1/d/1RRC6MRwxZJzaLFHP0Xnn-tdbWv5bfLeW7QTcKD5ytLs/edit");
-
-const getSpreadSheet = async (link: string) => {
-  const url = new URL(link);
-  const pathname = url.pathname;
-
-  try {
-    // check if is valid google sheet link
-    const isGoogleHost = url.host === "docs.google.com";
-
-    if (!isGoogleHost) {
-      throw new Error();
-    }
-
-    const pathSplit = pathname.split("/");
-    const correctPathLength = pathSplit.length === 7;
-
-    if (!correctPathLength) {
-      throw new Error();
-    }
-
-    const validPathname =
-      pathSplit[1] === "spreadsheets" && pathSplit[4] === "d";
-
-    if (!validPathname) {
-      throw new Error();
-    }
-
-    const spreadSheetId = pathSplit[5];
-    const gid = url.hash.slice(5);
-
-    console.log(spreadSheetId, gid);
-
-    // make api call to get spreadsheet given spreadsheet id and gid
-    const apiEndpoint = `http://localhost:8000/api/spreadsheets/${spreadSheetId}/sheets/${gid}`;
-
-    fetch(apiEndpoint)
-      .then((res) => res.json())
-      .then((data) => console.log(data));
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
-
-  // console.log(url);
-
-  // grab spreadsheet id and gid
-
-  //
-
-  return ["Sheet 1", "Sheet 2"];
-};
-
 export const ImportSpreadSheetCard: React.FC<Props> = () => {
   const [googleSheetLink, setGoogleSheetLink] = useState("");
-  const [shouldFetch, setShouldFetch] = useState(false);
+  const importGoogleSheet = useStateStore((state) => state.importGoogleSheet);
+  const next = useStateStore((state) => state.next);
+
+  const canContinue = useStateStore((state) =>
+    Boolean(state.googleSheetLink.length > 0 && state.sheet)
+  );
+
+  const importGoogleSheetFromLink = async (link: string) => {
+    const sheet = await getSpreadSheet(link);
+    importGoogleSheet(link, sheet);
+
+    return sheet;
+  };
 
   return (
     <Card className="flex w-full max-w-[974px] h-[584px]">
-      {shouldFetch && <Fetcher link={googleSheetLink} />}
-
       <div className="flex flex-col justify-between px-7 pt-9 pb-7 w-full h-full">
         <InstructionSection
           icon={UserGroupIcon}
@@ -105,11 +61,11 @@ export const ImportSpreadSheetCard: React.FC<Props> = () => {
           <Button
             className="mt-4"
             size="lg"
-            onClick={() => {
+            onClick={async () => {
               console.log("asdfasdf");
-              // setShouldFetch(true);
+              const sheet = await importGoogleSheetFromLink(googleSheetLink);
 
-              getSpreadSheet(link);
+              console.log(sheet);
             }}
           >
             Import
@@ -118,18 +74,10 @@ export const ImportSpreadSheetCard: React.FC<Props> = () => {
       </div>
 
       <div className="flex justify-end items-end pb-7 px-7 left-img w-full bg-[url('https://images.unsplash.com/photo-1604079628040-94301bb21b91?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80')]">
-        <Button size="lg">Continue</Button>
+        <Button disabled={!canContinue} size="lg" onClick={next}>
+          Continue
+        </Button>
       </div>
     </Card>
   );
-};
-
-const Fetcher: React.FC<{ link: string }> = ({ link }) => {
-  const { data } = useSWR(["/api/spreadsheets", link], () =>
-    getSpreadSheet(link)
-  );
-
-  console.log(data);
-
-  return null;
 };

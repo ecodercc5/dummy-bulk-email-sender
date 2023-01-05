@@ -1,14 +1,18 @@
 import { ImportSpreadSheetCard } from "./containers/ImportSpreadSheetCard";
 import Background from "./components/Background";
 import { WizardCard } from "./containers/WizardCard";
+import { useStateStore } from "./hooks/state-store";
+import { PreviewTableCard } from "./containers/PreviewTableCard";
 
 function App() {
+  const currentStep = useStateStore((state) => state.currentStep);
+
   return (
     <>
       <Background className="w-full h-full"></Background>
       <div className="App relative flex justify-center items-center">
         <WizardCard className="w-full max-w-[974px]">
-          <ImportSpreadSheetCard />
+          {currentStep === 1 ? <ImportSpreadSheetCard /> : <PreviewTableCard />}
         </WizardCard>
 
         {/* <table className="rounded-md">

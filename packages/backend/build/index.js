@@ -18,6 +18,7 @@ app.get("/api/spreadsheets", (0, sheet_1.getSheet)((req) => req.query), middlewa
 app.get("/api/spreadsheets/:spreadSheetId/sheets/:gid", async (req, res) => {
     const { spreadSheetId, gid } = req.params;
     const sheetsAPI = await google_sheets_1.GoogleSheets.createAPI("./secrets.json");
+    console.log("yoooo");
     try {
         // get spreadsheet
         const getSpreadhSheetsRes = await sheetsAPI.spreadsheets.get({
@@ -34,6 +35,7 @@ app.get("/api/spreadsheets/:spreadSheetId/sheets/:gid", async (req, res) => {
             id: spreadSheetId,
             range: sheetTitle,
         });
+        console.log(sheetData);
         return res.json({
             data: {
                 sheet: sheetData,
@@ -41,6 +43,7 @@ app.get("/api/spreadsheets/:spreadSheetId/sheets/:gid", async (req, res) => {
         });
     }
     catch {
+        console.log("bad request");
         return res.status(400).json({ error: "Bad Request" });
     }
 });

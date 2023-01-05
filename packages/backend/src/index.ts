@@ -27,6 +27,8 @@ app.get("/api/spreadsheets/:spreadSheetId/sheets/:gid", async (req, res) => {
   const { spreadSheetId, gid } = req.params;
   const sheetsAPI = await GoogleSheets.createAPI("./secrets.json");
 
+  console.log("yoooo");
+
   try {
     // get spreadsheet
     const getSpreadhSheetsRes = await sheetsAPI.spreadsheets.get({
@@ -47,12 +49,16 @@ app.get("/api/spreadsheets/:spreadSheetId/sheets/:gid", async (req, res) => {
       range: sheetTitle,
     });
 
+    console.log(sheetData);
+
     return res.json({
       data: {
         sheet: sheetData,
       },
     });
   } catch {
+    console.log("bad request");
+
     return res.status(400).json({ error: "Bad Request" });
   }
 });
