@@ -1,7 +1,12 @@
 import React from "react";
 import * as Tooltip from "@radix-ui/react-tooltip";
+import classNames from "classnames";
 
-interface Props {
+interface Props
+  extends React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLDivElement>,
+    HTMLDivElement
+  > {
   activeIndex?: number;
   numSteps: number;
   stepLabels: string[];
@@ -11,6 +16,8 @@ export const Wizard: React.FC<Props> = ({
   activeIndex = 0,
   numSteps,
   stepLabels,
+  className,
+  ...props
 }) => {
   const validStepLabels = stepLabels.length === numSteps;
 
@@ -37,7 +44,11 @@ export const Wizard: React.FC<Props> = ({
     return children;
   };
 
-  return <div className="flex w-[350px] gap-3">{produceChildren()}</div>;
+  return (
+    <div className={classNames("flex gap-3", className)} {...props}>
+      {produceChildren()}
+    </div>
+  );
 };
 
 interface IWizardProgressProps {

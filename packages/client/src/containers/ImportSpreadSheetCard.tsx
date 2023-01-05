@@ -23,7 +23,59 @@ const text = (
   </>
 );
 
-const fetcher = async () => {
+const link =
+  "https://docs.google.com/spreadsheets/u/1/d/1RRC6MRwxZJzaLFHP0Xnn-tdbWv5bfLeW7QTcKD5ytLs/edit#gid=0";
+
+// ("/spreadsheets/u/1/d/1RRC6MRwxZJzaLFHP0Xnn-tdbWv5bfLeW7QTcKD5ytLs/edit");
+
+const getSpreadSheet = async (link: string) => {
+  const url = new URL(link);
+  const pathname = url.pathname;
+
+  try {
+    // check if is valid google sheet link
+    const isGoogleHost = url.host === "docs.google.com";
+
+    if (!isGoogleHost) {
+      throw new Error();
+    }
+
+    const pathSplit = pathname.split("/");
+    const correctPathLength = pathSplit.length === 7;
+
+    if (!correctPathLength) {
+      throw new Error();
+    }
+
+    const validPathname =
+      pathSplit[1] === "spreadsheets" && pathSplit[4] === "d";
+
+    if (!validPathname) {
+      throw new Error();
+    }
+
+    const spreadSheetId = pathSplit[5];
+    const gid = url.hash.slice(5);
+
+    console.log(spreadSheetId, gid);
+
+    // make api call to get spreadsheet given spreadsheet id and gid
+    const apiEndpoint = `http://localhost:8000/api/spreadsheets/${spreadSheetId}/sheets/${gid}`;
+
+    fetch(apiEndpoint)
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+
+  // console.log(url);
+
+  // grab spreadsheet id and gid
+
+  //
+
   return ["Sheet 1", "Sheet 2"];
 };
 
@@ -55,7 +107,9 @@ export const ImportSpreadSheetCard: React.FC<Props> = () => {
             size="lg"
             onClick={() => {
               console.log("asdfasdf");
-              setShouldFetch(true);
+              // setShouldFetch(true);
+
+              getSpreadSheet(link);
             }}
           >
             Import
@@ -71,7 +125,9 @@ export const ImportSpreadSheetCard: React.FC<Props> = () => {
 };
 
 const Fetcher: React.FC<{ link: string }> = ({ link }) => {
-  const { data } = useSWR(["/api/spreadsheets", link], fetcher);
+  const { data } = useSWR(["/api/spreadsheets", link], () =>
+    getSpreadSheet(link)
+  );
 
   console.log(data);
 
