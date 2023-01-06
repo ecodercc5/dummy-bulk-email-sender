@@ -3,6 +3,31 @@ import Background from "./components/Background";
 import { WizardCard } from "./containers/WizardCard";
 import { useStateStore } from "./hooks/state-store";
 import { PreviewTableCard } from "./containers/PreviewTableCard";
+import { WriteEmailCard } from "./containers/WriteEmailCard";
+import { SummaryCard } from "./containers/SummaryCard";
+import { SuccessCard } from "./containers/SuccessCard";
+
+const render = (currentStep: number) => {
+  switch (currentStep) {
+    case 1:
+      return <ImportSpreadSheetCard />;
+
+    case 2:
+      return <PreviewTableCard />;
+
+    case 3:
+      return <WriteEmailCard />;
+
+    case 4:
+      return <SummaryCard />;
+
+    case 5:
+      return <SuccessCard />;
+
+    default:
+      return null;
+  }
+};
 
 function App() {
   const currentStep = useStateStore((state) => state.currentStep);
@@ -12,7 +37,9 @@ function App() {
       <Background className="w-full h-full"></Background>
       <div className="App relative flex justify-center items-center">
         <WizardCard className="w-full max-w-[974px]">
-          {currentStep === 1 ? <ImportSpreadSheetCard /> : <PreviewTableCard />}
+          {/* {currentStep === 1 ? <ImportSpreadSheetCard /> : <PreviewTableCard />} */}
+
+          {render(currentStep)}
         </WizardCard>
 
         {/* <table className="rounded-md">

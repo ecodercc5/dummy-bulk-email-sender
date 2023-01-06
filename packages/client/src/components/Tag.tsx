@@ -13,6 +13,7 @@ export const Tag: React.FC<React.PropsWithChildren<Props>> = ({
 }) => {
   return (
     <span
+      tabIndex={0}
       className={`tag flex justify-center items-center px-3 h-7 bg-light-gray-24 
                  rounded-full text-base font-medium text-blue-gray cursor-pointer ${className}`}
       {...props}

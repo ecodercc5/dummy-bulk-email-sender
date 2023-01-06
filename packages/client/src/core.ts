@@ -8,3 +8,9 @@ export interface ISheet {
 export interface ISheetRow {
   [header: string]: any;
 }
+
+export interface IEmail {
+  to: string;
+  subject: string;
+  body: string;
+}

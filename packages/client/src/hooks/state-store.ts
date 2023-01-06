@@ -1,12 +1,14 @@
 import create from "zustand";
-import { ISheet } from "../core";
+import { IEmail, ISheet } from "../core";
 
 export interface IState {
   numSteps: number;
   currentStep: number;
   googleSheetLink: string;
   sheet?: ISheet;
+  email: IEmail;
   importGoogleSheet(googleSheetLink: string, sheet: ISheet): void;
+  setEmail(email: IEmail): void;
   next(): void;
   back(): void;
 }
@@ -15,6 +17,11 @@ export const useStateStore = create<IState>((set) => ({
   numSteps: 4,
   currentStep: 1,
   googleSheetLink: "",
+  email: {
+    to: "",
+    subject: "",
+    body: "",
+  },
   importGoogleSheet: (googleSheetLink: string, sheet: ISheet) =>
     set((state) => {
       return {
@@ -23,6 +30,7 @@ export const useStateStore = create<IState>((set) => ({
         sheet,
       };
     }),
+  setEmail: (email) => set((state) => ({ ...state, email })),
   next: () =>
     set((state) => {
       return {

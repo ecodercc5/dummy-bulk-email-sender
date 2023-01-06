@@ -12,6 +12,7 @@ interface Props {}
 
 export const PreviewTableCard: React.FC<Props> = () => {
   const back = useStateStore((state) => state.back);
+  const next = useStateStore((state) => state.next);
   const sheet = useStateStore((state) => state.sheet!);
 
   return (
@@ -27,38 +28,17 @@ export const PreviewTableCard: React.FC<Props> = () => {
 
           <div>
             <SheetTable className="w-full" sheet={sheet} />
-            {/* <table className="rounded-md w-full">
-              <thead>
-                <tr>
-                  {sheet.headers.map((header) => {
-                    return <th scope="col">{header}</th>;
-                  })}
-                </tr>
-              </thead>
-
-              <tbody>
-                {sheet.rows.map((row) => {
-                  return (
-                    <tr>
-                      {Object.values(row).map((value) => {
-                        return <td>{value}</td>;
-                      })}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table> */}
           </div>
         </div>
       </div>
-
-      {/* Table */}
 
       <div className="absolute flex gap-3 right-7 bottom-7">
         <Button variant="secondary" size="lg" onClick={back}>
           Back
         </Button>
-        <Button size="lg">Continue</Button>
+        <Button size="lg" onClick={next}>
+          Continue
+        </Button>
       </div>
     </Card>
   );
