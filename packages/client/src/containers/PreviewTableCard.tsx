@@ -7,13 +7,17 @@ import { SMALL_ICON } from "../icon-styles";
 import { useStateStore } from "../hooks/state-store";
 import { InstructionSection } from "../components/InstructionSection";
 import { SheetTable } from "../components/SheetTable";
+import { Step, useAppStore } from "../hooks/use-app-store";
 
 interface Props {}
 
 export const PreviewTableCard: React.FC<Props> = () => {
-  const back = useStateStore((state) => state.back);
-  const next = useStateStore((state) => state.next);
-  const sheet = useStateStore((state) => state.sheet!);
+  const sheet = useAppStore((state) =>
+    state.type === Step.PreviewSpreadSheet ? state.sheet : null
+  )!;
+
+  const back = useAppStore((state) => state.back);
+  // const next = useStateStore((state) => state.next);
 
   return (
     <Card className="relative flex flex-col w-full max-w-[974px] h-[584px]">
@@ -36,9 +40,7 @@ export const PreviewTableCard: React.FC<Props> = () => {
         <Button variant="secondary" size="lg" onClick={back}>
           Back
         </Button>
-        <Button size="lg" onClick={next}>
-          Continue
-        </Button>
+        <Button size="lg">Continue</Button>
       </div>
     </Card>
   );

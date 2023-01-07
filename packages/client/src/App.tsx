@@ -6,40 +6,52 @@ import { PreviewTableCard } from "./containers/PreviewTableCard";
 import { WriteEmailCard } from "./containers/WriteEmailCard";
 import { SummaryCard } from "./containers/SummaryCard";
 import { SuccessCard } from "./containers/SuccessCard";
+import { Step, useAppStore } from "./hooks/use-app-store";
 
-const render = (currentStep: number) => {
-  switch (currentStep) {
-    case 1:
-      return <ImportSpreadSheetCard />;
+// const render = (currentStep: number) => {
+//   switch (currentStep) {
+//     case 1:
+//       return <ImportSpreadSheetCard />;
 
-    case 2:
-      return <PreviewTableCard />;
+//     case 2:
+//       return <PreviewTableCard />;
 
-    case 3:
-      return <WriteEmailCard />;
+//     case 3:
+//       return <WriteEmailCard />;
 
-    case 4:
-      return <SummaryCard />;
+//     case 4:
+//       return <SummaryCard />;
 
-    case 5:
-      return <SuccessCard />;
+//     case 5:
+//       return <SuccessCard />;
 
-    default:
-      return null;
-  }
-};
+//     default:
+//       return null;
+//   }
+// };
 
 function App() {
-  const currentStep = useStateStore((state) => state.currentStep);
+  const type = useAppStore((state) => state.type);
+
+  const renderComponent = (step: Step) => {
+    switch (step) {
+      case Step.ImportSpreadSheet:
+        return <ImportSpreadSheetCard />;
+      case Step.PreviewSpreadSheet:
+        return <PreviewTableCard />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <>
       <Background className="w-full h-full"></Background>
       <div className="App relative flex justify-center items-center">
         <WizardCard className="w-full max-w-[974px]">
-          {/* {currentStep === 1 ? <ImportSpreadSheetCard /> : <PreviewTableCard />} */}
+          {renderComponent(type)}
 
-          {render(currentStep)}
+          {/* {render(currentStep)} */}
         </WizardCard>
 
         {/* <table className="rounded-md">

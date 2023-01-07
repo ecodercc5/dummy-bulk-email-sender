@@ -42,7 +42,8 @@ app.get("/api/spreadsheets/:spreadSheetId/sheets/:gid", async (req, res) => {
             },
         });
     }
-    catch {
+    catch (err) {
+        console.error(err);
         console.log("bad request");
         return res.status(400).json({ error: "Bad Request" });
     }

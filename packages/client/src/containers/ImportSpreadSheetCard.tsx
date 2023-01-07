@@ -7,7 +7,7 @@ import { SMALL_ICON } from "../icon-styles";
 import { InstructionSection } from "../components/InstructionSection";
 import useSWR from "swr";
 import { getSpreadSheet } from "../api";
-import { useStateStore } from "../hooks/state-store";
+import { useAppStore } from "../hooks/use-app-store";
 
 interface Props {}
 
@@ -26,20 +26,23 @@ const text = (
 );
 
 export const ImportSpreadSheetCard: React.FC<Props> = () => {
+  const appState = useAppStore();
   const [googleSheetLink, setGoogleSheetLink] = useState("");
-  const importGoogleSheet = useStateStore((state) => state.importGoogleSheet);
-  const next = useStateStore((state) => state.next);
+  const key = ["/api/spreadsheets/:id/sheets/:gid", googleSheetLink];
+  const { mutate } = useSWR(key);
 
-  const canContinue = useStateStore((state) =>
-    Boolean(state.googleSheetLink.length > 0 && state.sheet)
-  );
+  const canContinue = appState.canContinue();
 
-  const importGoogleSheetFromLink = async (link: string) => {
-    const sheet = await getSpreadSheet(link);
-    importGoogleSheet(link, sheet);
+  const handleImportSheet = () => {
+    mutate(() => getSpreadSheet(googleSheetLink)).then((sheet) => {
+      console.log(`[imported sheet]`);
+      console.log(sheet);
 
-    return sheet;
+      appState.importSpreadSheet(googleSheetLink, sheet);
+    });
   };
+
+  console.log(appState);
 
   return (
     <Card className="flex w-full max-w-[974px] h-[584px]">
@@ -58,23 +61,14 @@ export const ImportSpreadSheetCard: React.FC<Props> = () => {
             icon={<ArrowUpTrayIcon className={SMALL_ICON} />}
             onChange={(e) => setGoogleSheetLink(e.target.value)}
           />
-          <Button
-            className="mt-4"
-            size="lg"
-            onClick={async () => {
-              console.log("asdfasdf");
-              const sheet = await importGoogleSheetFromLink(googleSheetLink);
-
-              console.log(sheet);
-            }}
-          >
+          <Button className="mt-4" size="lg" onClick={handleImportSheet}>
             Import
           </Button>
         </div>
       </div>
 
       <div className="flex justify-end items-end pb-7 px-7 left-img w-full bg-[url('https://images.unsplash.com/photo-1604079628040-94301bb21b91?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80')]">
-        <Button disabled={!canContinue} size="lg" onClick={next}>
+        <Button size="lg" disabled={!canContinue} onClick={appState.next}>
           Continue
         </Button>
       </div>
