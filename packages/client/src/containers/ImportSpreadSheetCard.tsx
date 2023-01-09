@@ -35,8 +35,8 @@ export const ImportSpreadSheetCard: React.FC<Props> = () => {
 
   const handleImportSheet = () => {
     mutate(() => getSpreadSheet(googleSheetLink)).then((sheet) => {
-      console.log(`[imported sheet]`);
-      console.log(sheet);
+      // console.log(`[imported sheet]`);
+      // console.log(sheet);
 
       appState.importSpreadSheet(googleSheetLink, sheet);
     });
@@ -53,18 +53,23 @@ export const ImportSpreadSheetCard: React.FC<Props> = () => {
           text={text}
         />
 
-        <div className="flex flex-col items-stretch">
-          <IconInput
-            value={googleSheetLink}
-            className="w-full"
-            placeholder="Paste your google sheet link"
-            icon={<ArrowUpTrayIcon className={SMALL_ICON} />}
-            onChange={(e) => setGoogleSheetLink(e.target.value)}
-          />
-          <Button className="mt-4" size="lg" onClick={handleImportSheet}>
-            Import
-          </Button>
-        </div>
+        {appState.sheetImported ? (
+          <button onClick={appState.selectNewSpreadSheet}>Import New X</button>
+        ) : (
+          <div className="flex flex-col items-stretch">
+            <IconInput
+              value={googleSheetLink}
+              className="w-full"
+              placeholder="Paste your google sheet link"
+              icon={<ArrowUpTrayIcon className={SMALL_ICON} />}
+              onChange={(e) => setGoogleSheetLink(e.target.value)}
+            />
+
+            <Button className="mt-4" size="lg" onClick={handleImportSheet}>
+              Import
+            </Button>
+          </div>
+        )}
       </div>
 
       <div className="flex justify-end items-end pb-7 px-7 left-img w-full bg-[url('https://images.unsplash.com/photo-1604079628040-94301bb21b91?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80')]">

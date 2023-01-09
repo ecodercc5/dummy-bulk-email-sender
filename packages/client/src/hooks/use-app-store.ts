@@ -7,7 +7,7 @@ export enum Step {
 }
 
 type Actions = {
-  importSpreadSheet(googleSheetLink: string, sheet: ISheet): void;
+  importSpreadSheet(link: string, data: ISheet): void;
   selectNewSpreadSheet(): void;
   canContinue(): boolean;
   next(): void;
@@ -16,52 +16,66 @@ type Actions = {
 type BaseState = { type: Step };
 
 type SpreadSheetImported = {
-  googleSheetLink: string;
-  sheet: ISheet;
-  sheetImported: true;
+  link: string;
+  data: ISheet;
+  imported: true;
 };
 
 type SpreadSheetNotImported = {
-  sheetImported: false;
+  imported: false;
 };
 
-type SpreadSheetImportedState = {
-  type: Step.ImportSpreadSheet;
-} & SpreadSheetImported;
+type ImportSpreadSheetBaseState = { type: Step.ImportSpreadSheet };
+type PreviewSpreadSheetBaseState = { type: Step.PreviewSpreadSheet };
 
-type SpreadSheetNotImportedState = {
-  type: Step.ImportSpreadSheet;
-} & SpreadSheetNotImported;
+type SpreadSheetImportedState = ImportSpreadSheetBaseState & {
+  sheet: SpreadSheetImported;
+};
+
+type SpreadSheetNotImportedState = ImportSpreadSheetBaseState & {
+  sheet: SpreadSheetNotImported;
+};
 
 type ImportSpreadSheetState =
   | SpreadSheetImportedState
   | SpreadSheetNotImportedState;
 
-type PreviewSpreadSheetState = {
-  type: Step.PreviewSpreadSheet;
-} & SpreadSheetImported;
+type PreviewSpreadSheetState = PreviewSpreadSheetBaseState &
+  SpreadSheetImported;
 
 type AppState = ImportSpreadSheetState | PreviewSpreadSheetState;
 
 export const useAppStore = create<AppState & Actions>((set, get) => ({
   type: Step.ImportSpreadSheet,
-  sheetImported: false,
-  importSpreadSheet: (googleSheetLink, sheet) =>
+  sheet: {
+    imported: false,
+  },
+  importSpreadSheet: (link, data) =>
     set((state) => {
-      if (state.type === Step.ImportSpreadSheet && !state.sheetImported) {
-        const { sheetImported, ...rest } = state;
+      if (state.type === Step.ImportSpreadSheet && !state.sheet.imported) {
+        const newState: Partial<SpreadSheetImportedState> = {
+          type: Step.ImportSpreadSheet,
+          sheet: {
+            imported: true,
+            link,
+            data,
+          },
+        };
 
-        return {
-          ...rest,
-          sheetImported: true,
-          googleSheetLink,
-          sheet,
-        } as SpreadSheetImportedState;
+        return newState;
       }
       return state;
     }),
   selectNewSpreadSheet: () =>
     set((state) => {
+      if (state.type === Step.ImportSpreadSheet && state.sheet.imported) {
+        return {
+          sheet: {
+            imported: false,
+          },
+        };
+      }
+
       return state;
     }),
   canContinue: () => {
@@ -69,39 +83,79 @@ export const useAppStore = create<AppState & Actions>((set, get) => ({
 
     switch (state.type) {
       case Step.ImportSpreadSheet: {
-        return state.sheetImported;
+        return state.sheet.imported;
       }
       default:
         return false;
     }
   },
-  next: () =>
-    set((state) => {
-      if (state.type === Step.ImportSpreadSheet) {
-        if (state.canContinue()) {
-          const { type, ...rest } = state as SpreadSheetImportedState;
-
-          return {
-            ...rest,
-            type: Step.PreviewSpreadSheet,
-          } as PreviewSpreadSheetState;
-        }
-
-        return state;
-      }
-
-      return state;
-    }),
-  back: () =>
-    set((state) => {
-      switch (state.type) {
-        case Step.PreviewSpreadSheet:
-          return {
-            ...state,
-            type: Step.ImportSpreadSheet,
-          } as SpreadSheetImportedState;
-      }
-
-      return state;
-    }),
+  next: () => {},
+  back: () => {},
 }));
+
+// importSpreadSheet: (googleSheetLink, sheet) =>
+//     set((state) => {
+//       if (state.type === Step.ImportSpreadSheet && !state.sheet.imported) {
+//         const { sheetImported, ...rest } = state;
+
+//         return {
+
+//         } as SpreadSheetImportedState;
+//       }
+//       return state;
+//     }),
+//   selectNewSpreadSheet: () =>
+//     set((state) => {
+//       if (state.type === Step.ImportSpreadSheet && state.sheetImported) {
+//         const { sheet, googleSheetLink, ...rest } = state;
+
+//         return {
+//           ...rest,
+//           type: Step.ImportSpreadSheet,
+//           sheetImported: false,
+//         };
+//       }
+
+//       return state;
+//     }),
+//   canContinue: () => {
+//     const state = get();
+
+//     switch (state.type) {
+//       case Step.ImportSpreadSheet: {
+//         return state.sheetImported;
+//       }
+//       default:
+//         return false;
+//     return false
+//     }
+//   },
+//   next: () =>
+//     set((state) => {
+//       if (state.type === Step.ImportSpreadSheet) {
+//         if (state.canContinue()) {
+//           const { type, ...rest } = state as SpreadSheetImportedState;
+
+//           return {
+//             ...rest,
+//             type: Step.PreviewSpreadSheet,
+//           } as PreviewSpreadSheetState;
+//         }
+
+//         return state;
+//       }
+
+//       return state;
+//     }),
+//   back: () =>
+//     set((state) => {
+//       switch (state.type) {
+//         case Step.PreviewSpreadSheet:
+//           return {
+//             ...state,
+//             type: Step.ImportSpreadSheet,
+//           } as SpreadSheetImportedState;
+//       }
+
+//       return state;
+//     }),
